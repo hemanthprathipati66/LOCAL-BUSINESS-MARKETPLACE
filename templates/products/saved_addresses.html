@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Saved Addresses</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #f5f5f5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 700px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+            margin-top: 0;
+            margin-bottom: 30px;
+        }
+
+        .address {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .address h3 {
+            margin-top: 0;
+            word-break: break-word;
+        }
+
+        .address p {
+            margin: 8px 0;
+            line-height: 1.5;
+            word-break: break-word;
+        }
+
+        .delete-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 10px 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+
+        .delete-btn:hover {
+            background-color: darkred;
+        }
+
+        .add-section {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f9f9f9;
+        }
+
+        .add-section h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .form-group textarea {
+            height: 90px;
+            resize: vertical;
+        }
+
+        .save-btn {
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .save-btn:hover {
+            background-color: darkgreen;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 18px;
+            background-color: blue;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .no-address {
+            text-align: center;
+            color: #666;
+            padding: 20px;
+        }
+
+        /* Tablet */
+
+        @media (max-width: 768px) {
+
+            body {
+                padding: 25px 15px;
+            }
+
+            .container {
+                padding: 25px 20px;
+            }
+
+        }
+
+        /* Mobile */
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 15px 10px;
+            }
+
+            .container {
+                padding: 20px 15px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 25px;
+            }
+
+            .address {
+                padding: 15px;
+            }
+
+            .address h3 {
+                font-size: 19px;
+            }
+
+            .address p {
+                font-size: 14px;
+            }
+
+            .delete-btn {
+                width: 100%;
+                padding: 12px;
+                margin-top: 5px;
+            }
+
+            .add-section {
+                padding: 15px;
+            }
+
+            .add-section h2 {
+                font-size: 20px;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                font-size: 16px;
+                padding: 12px;
+            }
+
+            .save-btn {
+                width: 100%;
+                padding: 13px;
+            }
+
+            .back-btn {
+                display: block;
+                width: 100%;
+                padding: 13px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="container">
+
+    <h1>
+        Saved Addresses 📍
+    </h1>
+
+
+    <!-- =========================
+         EXISTING ADDRESSES
+         ========================= -->
+
+    {% if addresses %}
+
+        {% for address in addresses %}
+
+            <div class="address">
+
+                <h3>
+                    {{ address.full_name }}
+                </h3>
+
+                <p>
+                    📞 {{ address.phone }}
+                </p>
+
+                <p>
+                    🏠 {{ address.address }}
+                </p>
+
+                <p>
+                    {{ address.city }},
+                    {{ address.state }}
+                    - {{ address.pincode }}
+                </p>
+
+
+                <!-- DELETE ADDRESS -->
+
+                <form
+                    method="post"
+                    action="{% url 'delete_saved_address' address.id %}"
+                >
+
+                    {% csrf_token %}
+
+                    <button
+                        type="submit"
+                        class="delete-btn"
+                    >
+                        Delete Address
+                    </button>
+
+                </form>
+
+            </div>
+
+        {% endfor %}
+
+    {% else %}
+
+        <div class="no-address">
+
+            <p>
+                You don't have any saved addresses yet.
+            </p>
+
+        </div>
+
+    {% endif %}
+
+
+    <!-- =========================
+         ADD NEW ADDRESS
+         ========================= -->
+
+    <div class="add-section">
+
+        <h2>
+            Add New Address
+        </h2>
+
+
+        <form
+            method="post"
+            action="{% url 'save_address' %}"
+        >
+
+            {% csrf_token %}
+
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+                <label for="full_name">
+                    Full Name
+                </label>
+
+                <input
+                    type="text"
+                    id="full_name"
+                    name="full_name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+                <label for="phone">
+                    Phone Number
+                </label>
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    maxlength="15"
+                    required
+                >
+
+            </div>
+
+
+            <!-- ADDRESS -->
+
+            <div class="form-group">
+
+                <label for="address">
+                    Address
+                </label>
+
+                <textarea
+                    id="address"
+                    name="address"
+                    placeholder="Enter your complete address"
+                    required
+                ></textarea>
+
+            </div>
+
+
+            <!-- CITY -->
+
+            <div class="form-group">
+
+                <label for="city">
+                    City
+                </label>
+
+                <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    placeholder="Enter your city"
+                    required
+                >
+
+            </div>
+
+
+            <!-- STATE -->
+
+            <div class="form-group">
+
+                <label for="state">
+                    State
+                </label>
+
+                <input
+                    type="text"
+                    id="state"
+                    name="state"
+                    placeholder="Enter your state"
+                    required
+                >
+
+            </div>
+
+
+            <!-- PINCODE -->
+
+            <div class="form-group">
+
+                <label for="pincode">
+                    Pincode
+                </label>
+
+                <input
+                    type="text"
+                    id="pincode"
+                    name="pincode"
+                    maxlength="10"
+                    placeholder="Enter your pincode"
+                    required
+                >
+
+            </div>
+
+
+            <!-- SAVE -->
+
+            <button
+                type="submit"
+                class="save-btn"
+            >
+                Save Address
+            </button>
+
+        </form>
+
+    </div>
+
+
+    <!-- BACK TO CHECKOUT -->
+
+    <a
+        href="{% url 'checkout' %}"
+        class="back-btn"
+    >
+        ← Back to Checkout
+    </a>
+
+</div>
+
+</body>
+
+</html>

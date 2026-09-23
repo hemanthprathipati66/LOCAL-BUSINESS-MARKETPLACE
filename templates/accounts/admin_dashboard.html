@@ -1,0 +1,391 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Admin Dashboard</title>
+
+    <style>
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            background-color: #f5f5f5;
+        }
+
+        .header {
+            background-color: #222;
+            color: white;
+            padding: 25px;
+            text-align: center;
+        }
+
+        .container {
+            width: 1000px;
+            margin: 30px auto;
+        }
+
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .card {
+            background-color: white;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px #ccc;
+            text-align: center;
+        }
+
+        .card h2 {
+            margin: 0;
+            font-size: 32px;
+        }
+
+        .card p {
+            font-size: 18px;
+            color: #555;
+        }
+
+        .users {
+            border-top: 5px solid blue;
+        }
+
+        .products {
+            border-top: 5px solid green;
+        }
+
+        .orders {
+            border-top: 5px solid orange;
+        }
+
+        .revenue {
+            border-top: 5px solid purple;
+        }
+
+        .reviews {
+            border-top: 5px solid #f5a623;
+        }
+
+        .wishlist {
+            border-top: 5px solid #e91e63;
+        }
+
+        .section {
+            background-color: white;
+            margin-top: 30px;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 0 8px #ccc;
+        }
+
+        .section h2 {
+            margin-top: 0;
+        }
+
+        .row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px;
+            border-bottom: 1px solid #ddd;
+            font-size: 17px;
+        }
+
+        .row:last-child {
+            border-bottom: none;
+        }
+
+        .number {
+            font-weight: bold;
+        }
+
+        .links {
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .links a {
+            display: inline-block;
+            padding: 12px 20px;
+            margin: 5px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .admin-btn {
+            background-color: #333;
+        }
+
+        .products-btn {
+            background-color: green;
+        }
+
+        .orders-btn {
+            background-color: blue;
+        }
+
+        .logout-btn {
+            background-color: #dc3545;
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+
+<div class="header">
+
+    <h1>
+        📊 Admin Dashboard
+    </h1>
+
+    <p>
+        Welcome, {{ request.user.username }}
+    </p>
+
+</div>
+
+
+<div class="container">
+
+
+    <!-- MAIN STATISTICS -->
+
+    <div class="cards">
+
+
+        <div class="card users">
+
+            <h2>
+                {{ total_users }}
+            </h2>
+
+            <p>
+                👥 Total Users
+            </p>
+
+        </div>
+
+
+        <div class="card products">
+
+            <h2>
+                {{ total_products }}
+            </h2>
+
+            <p>
+                🛍️ Total Products
+            </p>
+
+        </div>
+
+
+        <div class="card orders">
+
+            <h2>
+                {{ total_orders }}
+            </h2>
+
+            <p>
+                📦 Total Orders
+            </p>
+
+        </div>
+
+
+        <div class="card revenue">
+
+            <h2>
+                ₹{{ total_revenue|floatformat:2 }}
+            </h2>
+
+            <p>
+                💰 Total Revenue
+            </p>
+
+        </div>
+
+
+        <div class="card reviews">
+
+            <h2>
+                {{ total_reviews }}
+            </h2>
+
+            <p>
+                ⭐ Total Reviews
+            </p>
+
+        </div>
+
+
+        <div class="card wishlist">
+
+            <h2>
+                {{ total_wishlists }}
+            </h2>
+
+            <p>
+                ❤️ Wishlist Items
+            </p>
+
+        </div>
+
+
+    </div>
+
+
+    <!-- ORDER STATUS -->
+
+    <div class="section">
+
+        <h2>
+            📦 Order Status
+        </h2>
+
+
+        <div class="row">
+
+            <span>
+                Pending
+            </span>
+
+            <span class="number">
+                {{ pending_orders }}
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span>
+                Processing
+            </span>
+
+            <span class="number">
+                {{ processing_orders }}
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span>
+                Shipped
+            </span>
+
+            <span class="number">
+                {{ shipped_orders }}
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span>
+                Delivered
+            </span>
+
+            <span class="number">
+                {{ delivered_orders }}
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span>
+                Cancelled
+            </span>
+
+            <span class="number">
+                {{ cancelled_orders }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- PAYMENT STATUS -->
+
+    <div class="section">
+
+        <h2>
+            💳 Payment Status
+        </h2>
+
+
+        <div class="row">
+
+            <span>
+                Paid Orders
+            </span>
+
+            <span class="number">
+                {{ paid_orders }}
+            </span>
+
+        </div>
+
+
+        <div class="row">
+
+            <span>
+                Pending Payments
+            </span>
+
+            <span class="number">
+                {{ pending_payments }}
+            </span>
+
+        </div>
+
+    </div>
+
+
+    <!-- LINKS -->
+
+    <div class="links">
+
+        <a
+            href="{% url 'admin:index' %}"
+            class="admin-btn"
+        >
+            ⚙️ Django Admin
+        </a>
+
+
+        <a
+            href="{% url 'product_list' %}"
+            class="products-btn"
+        >
+            🛍️ Products
+        </a>
+
+
+        <a
+            href="{% url 'my_orders' %}"
+            class="orders-btn"
+        >
+            📦 My Orders
+        </a>
+
+    </div>
+
+
+</div>
+
+
+</body>
+
+</html>

@@ -1,0 +1,976 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+
+    <title>Order Details</title>
+
+    <meta
+        name="viewport"
+        content="width=device-width, initial-scale=1.0"
+    >
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 40px 20px;
+            background-color: #f5f5f5;
+        }
+
+        .details-container {
+            width: 100%;
+            max-width: 700px;
+            margin: auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .order-info {
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 15px;
+            margin-bottom: 25px;
+        }
+
+        .order-info h2 {
+            margin-top: 0;
+            word-break: break-word;
+        }
+
+        .order-info p {
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        .status {
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           DELIVERY ADDRESS
+           ========================= */
+
+        .address-info {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .address-info h2 {
+            margin-top: 0;
+        }
+
+        .address-info p {
+            font-size: 17px;
+            margin: 12px 0;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .label {
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           PAYMENT INFORMATION
+           ========================= */
+
+        .payment-info {
+            margin-top: 20px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .payment-info h2 {
+            margin-top: 0;
+        }
+
+        .payment-info p {
+            font-size: 17px;
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+        .payment-paid {
+            color: green;
+            font-weight: bold;
+        }
+
+        .payment-pending {
+            color: orange;
+            font-weight: bold;
+        }
+
+
+        /* =========================
+           ORDER STATUS TIMELINE
+           ========================= */
+
+        .tracking {
+            margin: 30px 0;
+        }
+
+        .tracking h2 {
+            margin-bottom: 25px;
+        }
+
+        .timeline {
+            position: relative;
+            margin-left: 20px;
+        }
+
+        .step {
+            display: flex;
+            align-items: center;
+            margin-bottom: 25px;
+            position: relative;
+            min-height: 30px;
+        }
+
+        .circle {
+            flex-shrink: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: #ccc;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .step.completed .circle {
+            background-color: green;
+        }
+
+        .step.current .circle {
+            background-color: blue;
+        }
+
+        .step-text {
+            font-size: 17px;
+            font-weight: bold;
+        }
+
+        .line {
+            position: absolute;
+            left: 14px;
+            top: 30px;
+            width: 3px;
+            height: 25px;
+            background-color: #ccc;
+        }
+
+        .step.completed .line {
+            background-color: green;
+        }
+
+
+        /* =========================
+           CANCELLED TIMELINE
+           ========================= */
+
+        .cancelled-timeline {
+            margin-left: 20px;
+        }
+
+        .cancelled-step {
+            display: flex;
+            align-items: center;
+            position: relative;
+            min-height: 30px;
+            margin-bottom: 25px;
+        }
+
+        .cancelled-circle {
+            flex-shrink: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            background-color: red;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            margin-right: 15px;
+        }
+
+        .cancelled-text {
+            font-size: 17px;
+            font-weight: bold;
+            color: red;
+        }
+
+        .cancelled-line {
+            position: absolute;
+            left: 14px;
+            top: 30px;
+            width: 3px;
+            height: 25px;
+            background-color: #ccc;
+        }
+
+
+        /* =========================
+           CANCEL ORDER
+           ========================= */
+
+        .cancel-section {
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 1px solid #ddd;
+        }
+
+        .cancel-btn {
+            background-color: red;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        .cancel-btn:hover {
+            background-color: darkred;
+        }
+
+        .cancel-message {
+            color: red;
+            font-weight: bold;
+            margin-top: 15px;
+        }
+
+
+        /* =========================
+           ORDER ITEMS
+           ========================= */
+
+        .item {
+            border: 1px solid #ddd;
+            padding: 20px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .item h3 {
+            margin-top: 0;
+            word-break: break-word;
+        }
+
+        .item p {
+            font-size: 17px;
+            line-height: 1.5;
+        }
+
+        .price {
+            font-weight: bold;
+        }
+
+        .quantity {
+            font-weight: bold;
+        }
+
+        .item-total {
+            font-weight: bold;
+            margin-top: 15px;
+            word-wrap: break-word;
+        }
+
+        .total {
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #333;
+            text-align: right;
+            word-wrap: break-word;
+        }
+
+
+        /* =========================
+           BUTTONS
+           ========================= */
+
+        .buttons {
+            margin-top: 25px;
+        }
+
+        .btn {
+            display: inline-block;
+            margin-right: 10px;
+            margin-top: 10px;
+            padding: 12px 18px;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .orders-btn {
+            background-color: blue;
+        }
+
+        .shopping-btn {
+            background-color: green;
+        }
+
+        .orders-btn:hover {
+            background-color: darkblue;
+        }
+
+        .shopping-btn:hover {
+            background-color: darkgreen;
+        }
+
+        .empty {
+            text-align: center;
+            color: #666;
+        }
+
+
+        /* =========================
+           TABLET
+           ========================= */
+
+        @media (max-width: 768px) {
+
+            body {
+                padding: 25px 15px;
+            }
+
+            .details-container {
+                padding: 25px 20px;
+            }
+
+            h1 {
+                font-size: 28px;
+                margin-bottom: 25px;
+            }
+
+            .address-info,
+            .payment-info {
+                padding: 18px;
+            }
+
+            .address-info p,
+            .payment-info p,
+            .order-info p,
+            .item p {
+                font-size: 16px;
+            }
+
+            .total {
+                font-size: 20px;
+            }
+
+        }
+
+
+        /* =========================
+           MOBILE
+           ========================= */
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 15px 10px;
+            }
+
+            .details-container {
+                padding: 20px 15px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 24px;
+                margin-bottom: 20px;
+            }
+
+            .order-info h2 {
+                font-size: 21px;
+            }
+
+            .order-info p {
+                font-size: 15px;
+            }
+
+            .address-info,
+            .payment-info {
+                padding: 14px;
+            }
+
+            .address-info h2,
+            .payment-info h2,
+            .tracking h2 {
+                font-size: 20px;
+            }
+
+            .address-info p,
+            .payment-info p {
+                font-size: 15px;
+                line-height: 1.6;
+            }
+
+            .timeline,
+            .cancelled-timeline {
+                margin-left: 5px;
+            }
+
+            .step {
+                margin-bottom: 25px;
+            }
+
+            .circle,
+            .cancelled-circle {
+                width: 28px;
+                height: 28px;
+                margin-right: 12px;
+                font-size: 13px;
+            }
+
+            .step-text,
+            .cancelled-text {
+                font-size: 15px;
+            }
+
+            .line,
+            .cancelled-line {
+                left: 13px;
+                top: 28px;
+            }
+
+            .cancel-btn {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .item {
+                padding: 15px;
+            }
+
+            .item h3 {
+                font-size: 18px;
+            }
+
+            .item p {
+                font-size: 15px;
+            }
+
+            .item-total {
+                line-height: 1.7;
+            }
+
+            .total {
+                font-size: 19px;
+                text-align: left;
+                line-height: 1.6;
+            }
+
+            .buttons {
+                margin-top: 20px;
+            }
+
+            .btn {
+                display: block;
+                width: 100%;
+                margin-right: 0;
+                margin-top: 10px;
+                padding: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+<div class="details-container">
+
+    <h1>
+        Order Details 📦
+    </h1>
+
+
+    <!-- ORDER INFORMATION -->
+
+    <div class="order-info">
+
+        <h2>
+            Order #{{ order.id }}
+        </h2>
+
+        <p>
+
+            Status:
+
+            <span class="status">
+                {{ order.status }}
+            </span>
+
+        </p>
+
+        <p>
+
+            Order Date:
+
+            {{ order.created_at|date:"d M Y, H:i" }}
+
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         DELIVERY ADDRESS
+         ========================= -->
+
+    <div class="address-info">
+
+        <h2>
+            Delivery Address 📍
+        </h2>
+
+        <p>
+
+            <span class="label">
+                Full Name:
+            </span>
+
+            {{ order.full_name }}
+
+        </p>
+
+        <p>
+
+            <span class="label">
+                Phone:
+            </span>
+
+            {{ order.phone }}
+
+        </p>
+
+        <p>
+
+            <span class="label">
+                Address:
+            </span>
+
+            {{ order.address }}
+
+        </p>
+
+        <p>
+
+            <span class="label">
+                City:
+            </span>
+
+            {{ order.city }}
+
+        </p>
+
+        <p>
+
+            <span class="label">
+                State:
+            </span>
+
+            {{ order.state }}
+
+        </p>
+
+        <p>
+
+            <span class="label">
+                Pincode:
+            </span>
+
+            {{ order.pincode }}
+
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         PAYMENT INFORMATION
+         ========================= -->
+
+    <div class="payment-info">
+
+        <h2>
+            Payment Information 💳
+        </h2>
+
+        <p>
+
+            <span class="label">
+                Payment Method:
+            </span>
+
+            {{ order.get_payment_method_display }}
+
+        </p>
+
+        <p>
+
+            <span class="label">
+                Payment Status:
+            </span>
+
+            {% if order.payment_status == 'Paid' %}
+
+                <span class="payment-paid">
+                    {{ order.payment_status }}
+                </span>
+
+            {% else %}
+
+                <span class="payment-pending">
+                    {{ order.payment_status }}
+                </span>
+
+            {% endif %}
+
+        </p>
+
+    </div>
+
+
+    <!-- =========================
+         ORDER STATUS TRACKING
+         ========================= -->
+
+    <div class="tracking">
+
+        <h2>
+            Order Status Tracking 🚚
+        </h2>
+
+
+        {% if order.status == 'Cancelled' %}
+
+            <!-- CANCELLED TRACKING -->
+
+            <div class="cancelled-timeline">
+
+                <div class="cancelled-step">
+
+                    <div class="cancelled-circle">
+                        ✓
+                    </div>
+
+                    <div class="step-text">
+                        Pending
+                    </div>
+
+                </div>
+
+
+                <div class="cancelled-step">
+
+                    <div class="cancelled-line"></div>
+
+                </div>
+
+
+                <div class="cancelled-step">
+
+                    <div class="cancelled-circle">
+                        ❌
+                    </div>
+
+                    <div class="cancelled-text">
+                        Cancelled
+                    </div>
+
+                </div>
+
+            </div>
+
+        {% else %}
+
+            <!-- NORMAL ORDER TRACKING -->
+
+            <div class="timeline">
+
+
+                <!-- PENDING -->
+
+                <div class="step
+                    {% if order.status == 'Pending' %}
+                        current
+                    {% elif order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}
+                        completed
+                    {% endif %}
+                ">
+
+                    <div class="circle">
+
+                        {% if order.status == 'Pending' or order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}
+                            ✓
+                        {% else %}
+                            1
+                        {% endif %}
+
+                    </div>
+
+                    <div class="step-text">
+                        Pending
+                    </div>
+
+                    <div class="line"></div>
+
+                </div>
+
+
+                <!-- PROCESSING -->
+
+                <div class="step
+                    {% if order.status == 'Processing' %}
+                        current
+                    {% elif order.status == 'Shipped' or order.status == 'Delivered' %}
+                        completed
+                    {% endif %}
+                ">
+
+                    <div class="circle">
+
+                        {% if order.status == 'Processing' or order.status == 'Shipped' or order.status == 'Delivered' %}
+                            ✓
+                        {% else %}
+                            2
+                        {% endif %}
+
+                    </div>
+
+                    <div class="step-text">
+                        Processing
+                    </div>
+
+                    <div class="line"></div>
+
+                </div>
+
+
+                <!-- SHIPPED -->
+
+                <div class="step
+                    {% if order.status == 'Shipped' %}
+                        current
+                    {% elif order.status == 'Delivered' %}
+                        completed
+                    {% endif %}
+                ">
+
+                    <div class="circle">
+
+                        {% if order.status == 'Shipped' or order.status == 'Delivered' %}
+                            ✓
+                        {% else %}
+                            3
+                        {% endif %}
+
+                    </div>
+
+                    <div class="step-text">
+                        Shipped
+                    </div>
+
+                    <div class="line"></div>
+
+                </div>
+
+
+                <!-- DELIVERED -->
+
+                <div class="step
+                    {% if order.status == 'Delivered' %}
+                        current
+                    {% endif %}
+                ">
+
+                    <div class="circle">
+
+                        {% if order.status == 'Delivered' %}
+                            ✓
+                        {% else %}
+                            4
+                        {% endif %}
+
+                    </div>
+
+                    <div class="step-text">
+                        Delivered
+                    </div>
+
+                </div>
+
+
+            </div>
+
+        {% endif %}
+
+    </div>
+
+
+    <!-- =========================
+         CANCEL ORDER
+         ========================= -->
+
+    {% if order.status == 'Pending' or order.status == 'Processing' %}
+
+        <div class="cancel-section">
+
+            <form
+                method="post"
+                action="{% url 'cancel_order' order.id %}"
+            >
+
+                {% csrf_token %}
+
+                <button
+                    type="submit"
+                    class="cancel-btn"
+                    onclick="return confirm('Are you sure you want to cancel this order?');"
+                >
+                    ❌ Cancel Order
+                </button>
+
+            </form>
+
+        </div>
+
+    {% elif order.status == 'Cancelled' %}
+
+        <p class="cancel-message">
+            ❌ This order has been cancelled.
+        </p>
+
+    {% endif %}
+
+
+    <!-- =========================
+         ORDERED PRODUCTS
+         ========================= -->
+
+    <h2>
+        Ordered Products
+    </h2>
+
+
+    {% for item in order_items %}
+
+        <div class="item">
+
+            <h3>
+                {{ item.product.name }}
+            </h3>
+
+            <p>
+
+                Price:
+
+                <span class="price">
+                    ₹{{ item.price|floatformat:2 }}
+                </span>
+
+            </p>
+
+            <p>
+
+                Quantity:
+
+                <span class="quantity">
+                    {{ item.quantity }}
+                </span>
+
+            </p>
+
+            <p class="item-total">
+
+                Item Total:
+
+                ₹{{ item.price|floatformat:2 }}
+                ×
+                {{ item.quantity }}
+                =
+                ₹{% widthratio item.price 1 item.quantity %}
+
+            </p>
+
+        </div>
+
+    {% empty %}
+
+        <p class="empty">
+            No products found in this order.
+        </p>
+
+    {% endfor %}
+
+
+    <!-- =========================
+         TOTAL
+         ========================= -->
+
+    <div class="total">
+
+        Total Amount:
+        ₹{{ order.total_amount|floatformat:2 }}
+
+    </div>
+
+
+    <!-- =========================
+         BUTTONS
+         ========================= -->
+
+    <div class="buttons">
+
+        <a
+            href="{% url 'my_orders' %}"
+            class="btn orders-btn"
+        >
+            ← Back to My Orders
+        </a>
+
+        <a
+            href="{% url 'product_list' %}"
+            class="btn shopping-btn"
+        >
+            Continue Shopping
+        </a>
+
+    </div>
+
+</div>
+
+</body>
+
+</html>

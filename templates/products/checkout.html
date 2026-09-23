@@ -1,0 +1,925 @@
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+    <title>Checkout</title>
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <style>
+
+        * {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background-color: #f5f5f5;
+        }
+
+
+        /* =========================
+           CHECKOUT CONTAINER
+        ========================= */
+
+        .checkout-container {
+            width: 100%;
+            max-width: 700px;
+            margin: 30px auto;
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 0 10px #ccc;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+
+        /* =========================
+           ORDER SUMMARY
+        ========================= */
+
+        .item {
+            border: 1px solid #ddd;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .item h3 {
+            margin-top: 0;
+            word-wrap: break-word;
+        }
+
+        .price {
+            font-weight: bold;
+        }
+
+        .quantity {
+            font-weight: bold;
+        }
+
+        .item-total {
+            font-weight: bold;
+            line-height: 1.6;
+        }
+
+        .total {
+            text-align: right;
+            font-size: 22px;
+            font-weight: bold;
+            margin-top: 25px;
+            padding-top: 20px;
+            border-top: 2px solid #333;
+        }
+
+
+        /* =========================
+           SAVED ADDRESSES
+        ========================= */
+
+        .saved-address-section {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #f0f8ff;
+        }
+
+        .saved-address-section h2 {
+            margin-top: 0;
+        }
+
+        .saved-address {
+            border: 1px solid #ccc;
+            background-color: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 8px;
+        }
+
+        .saved-address p {
+            margin: 6px 0;
+            line-height: 1.5;
+            word-wrap: break-word;
+        }
+
+        .use-address-btn {
+            margin-top: 10px;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px 16px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 15px;
+        }
+
+        .use-address-btn:hover {
+            background-color: #0056b3;
+        }
+
+        .no-address {
+            color: #666;
+        }
+
+        .manage-address-btn {
+            display: inline-block;
+            margin-top: 10px;
+            padding: 10px 15px;
+            background-color: #555;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .manage-address-btn:hover {
+            background-color: #333;
+        }
+
+
+        /* =========================
+           DELIVERY ADDRESS
+        ========================= */
+
+        .address-section {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .address-section h2 {
+            margin-top: 0;
+        }
+
+        .form-group {
+            margin-bottom: 15px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 6px;
+            font-weight: bold;
+        }
+
+        .form-group input,
+        .form-group textarea {
+            width: 100%;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 15px;
+        }
+
+        .form-group textarea {
+            height: 90px;
+            resize: vertical;
+        }
+
+
+        /* =========================
+           PAYMENT METHOD
+        ========================= */
+
+        .payment-section {
+            margin-top: 30px;
+            padding: 20px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            background-color: #fafafa;
+        }
+
+        .payment-section h2 {
+            margin-top: 0;
+        }
+
+        .payment-option {
+            margin: 15px 0;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+            background-color: white;
+        }
+
+        .payment-option label {
+            cursor: pointer;
+            font-size: 17px;
+            display: block;
+        }
+
+        .payment-option input {
+            margin-right: 10px;
+        }
+
+
+        /* =========================
+           BUTTONS
+        ========================= */
+
+        .place-order-btn {
+            margin-top: 25px;
+            background-color: green;
+            color: white;
+            border: none;
+            padding: 13px 22px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 17px;
+        }
+
+        .place-order-btn:hover {
+            background-color: darkgreen;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 20px;
+            padding: 12px 18px;
+            background-color: blue;
+            color: white;
+            text-decoration: none;
+            border-radius: 5px;
+        }
+
+        .back-btn:hover {
+            opacity: 0.9;
+        }
+
+
+        /* =========================
+           TABLET
+        ========================= */
+
+        @media (max-width: 768px) {
+
+            body {
+                padding: 15px;
+            }
+
+            .checkout-container {
+                margin: 15px auto;
+                padding: 20px;
+            }
+
+            .total {
+                text-align: left;
+            }
+
+        }
+
+
+        /* =========================
+           MOBILE
+        ========================= */
+
+        @media (max-width: 480px) {
+
+            body {
+                padding: 10px;
+            }
+
+            .checkout-container {
+                margin: 10px auto;
+                padding: 15px;
+                border-radius: 8px;
+            }
+
+            h1 {
+                font-size: 25px;
+            }
+
+            .item {
+                padding: 13px;
+            }
+
+            .item h3 {
+                font-size: 19px;
+            }
+
+            .total {
+                font-size: 20px;
+                text-align: left;
+            }
+
+            .saved-address-section,
+            .address-section,
+            .payment-section {
+                padding: 15px;
+            }
+
+            .saved-address {
+                padding: 12px;
+            }
+
+            .use-address-btn {
+                width: 100%;
+                padding: 12px;
+            }
+
+            .manage-address-btn {
+                width: 100%;
+                text-align: center;
+                padding: 12px;
+            }
+
+            .form-group input,
+            .form-group textarea {
+                font-size: 16px;
+            }
+
+            .payment-option {
+                padding: 13px;
+            }
+
+            .place-order-btn {
+                width: 100%;
+                padding: 13px;
+            }
+
+            .back-btn {
+                display: block;
+                width: 100%;
+                text-align: center;
+                padding: 12px;
+            }
+
+        }
+
+    </style>
+
+</head>
+
+
+<body>
+
+
+<div class="checkout-container">
+
+
+    <h1>
+        Checkout 🛒
+    </h1>
+
+
+    <!-- =========================
+         ORDER SUMMARY
+    ========================= -->
+
+    <h2>
+        Order Summary
+    </h2>
+
+
+    {% for item in cart_items %}
+
+        <div class="item">
+
+            <h3>
+                {{ item.product.name }}
+            </h3>
+
+
+            <p>
+
+                Price:
+
+                <span class="price">
+
+                    ₹{{ item.product.price|floatformat:2 }}
+
+                </span>
+
+            </p>
+
+
+            <p>
+
+                Quantity:
+
+                <span class="quantity">
+
+                    {{ item.quantity }}
+
+                </span>
+
+            </p>
+
+
+            <p class="item-total">
+
+                Item Total:
+
+                ₹{{ item.product.price|floatformat:2 }}
+
+                ×
+
+                {{ item.quantity }}
+
+            </p>
+
+        </div>
+
+    {% endfor %}
+
+
+    <!-- =========================
+         TOTAL
+    ========================= -->
+
+    <div class="total">
+
+        Total Amount:
+
+        ₹{{ total|floatformat:2 }}
+
+    </div>
+
+
+    <!-- =========================
+         SAVED ADDRESSES
+    ========================= -->
+
+    <div class="saved-address-section">
+
+
+        <h2>
+            Saved Addresses 📍
+        </h2>
+
+
+        {% if saved_addresses %}
+
+
+            <p>
+
+                Select a saved address to automatically fill
+                the delivery address below.
+
+            </p>
+
+
+            {% for saved_address in saved_addresses %}
+
+
+                <div class="saved-address">
+
+
+                    <strong>
+
+                        {{ saved_address.full_name }}
+
+                    </strong>
+
+
+                    <p>
+
+                        📞 {{ saved_address.phone }}
+
+                    </p>
+
+
+                    <p>
+
+                        🏠 {{ saved_address.address }}
+
+                    </p>
+
+
+                    <p>
+
+                        {{ saved_address.city }},
+
+                        {{ saved_address.state }}
+
+                        - {{ saved_address.pincode }}
+
+                    </p>
+
+
+                    <button
+                        type="button"
+                        class="use-address-btn"
+                        onclick="useAddress(
+                            '{{ saved_address.full_name|escapejs }}',
+                            '{{ saved_address.phone|escapejs }}',
+                            '{{ saved_address.address|escapejs }}',
+                            '{{ saved_address.city|escapejs }}',
+                            '{{ saved_address.state|escapejs }}',
+                            '{{ saved_address.pincode|escapejs }}'
+                        )"
+                    >
+
+                        Use This Address
+
+                    </button>
+
+
+                </div>
+
+
+            {% endfor %}
+
+
+            <a
+                href="{% url 'saved_addresses' %}"
+                class="manage-address-btn"
+            >
+
+                Manage Saved Addresses
+
+            </a>
+
+
+        {% else %}
+
+
+            <p class="no-address">
+
+                You don't have any saved addresses yet.
+
+            </p>
+
+
+            <a
+                href="{% url 'saved_addresses' %}"
+                class="manage-address-btn"
+            >
+
+                Add Saved Address
+
+            </a>
+
+
+        {% endif %}
+
+
+    </div>
+
+
+    <!-- =========================
+         CHECKOUT FORM
+    ========================= -->
+
+    <form
+        method="post"
+        action="{% url 'place_order' %}"
+    >
+
+
+        {% csrf_token %}
+
+
+        <!-- =========================
+             DELIVERY ADDRESS
+        ========================= -->
+
+        <div class="address-section">
+
+
+            <h2>
+
+                Delivery Address 📍
+
+            </h2>
+
+
+            <!-- FULL NAME -->
+
+            <div class="form-group">
+
+
+                <label for="full_name">
+
+                    Full Name
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="full_name"
+                    name="full_name"
+                    placeholder="Enter your full name"
+                    required
+                >
+
+
+            </div>
+
+
+            <!-- PHONE -->
+
+            <div class="form-group">
+
+
+                <label for="phone">
+
+                    Phone Number
+
+                </label>
+
+
+                <input
+                    type="tel"
+                    id="phone"
+                    name="phone"
+                    placeholder="Enter your phone number"
+                    maxlength="15"
+                    required
+                >
+
+
+            </div>
+
+
+            <!-- ADDRESS -->
+
+            <div class="form-group">
+
+
+                <label for="address">
+
+                    Address
+
+                </label>
+
+
+                <textarea
+                    id="address"
+                    name="address"
+                    placeholder="Enter your complete address"
+                    required
+                ></textarea>
+
+
+            </div>
+
+
+            <!-- CITY -->
+
+            <div class="form-group">
+
+
+                <label for="city">
+
+                    City
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="city"
+                    name="city"
+                    placeholder="Enter your city"
+                    required
+                >
+
+
+            </div>
+
+
+            <!-- STATE -->
+
+            <div class="form-group">
+
+
+                <label for="state">
+
+                    State
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="state"
+                    name="state"
+                    placeholder="Enter your state"
+                    required
+                >
+
+
+            </div>
+
+
+            <!-- PINCODE -->
+
+            <div class="form-group">
+
+
+                <label for="pincode">
+
+                    Pincode
+
+                </label>
+
+
+                <input
+                    type="text"
+                    id="pincode"
+                    name="pincode"
+                    placeholder="Enter your pincode"
+                    maxlength="10"
+                    required
+                >
+
+
+            </div>
+
+
+        </div>
+
+
+        <!-- =========================
+             PAYMENT METHOD
+        ========================= -->
+
+        <div class="payment-section">
+
+
+            <h2>
+
+                Payment Method 💳
+
+            </h2>
+
+
+            <!-- COD -->
+
+            <div class="payment-option">
+
+
+                <label>
+
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="COD"
+                        required
+                    >
+
+
+                    Cash on Delivery
+
+
+                </label>
+
+
+            </div>
+
+
+            <!-- UPI -->
+
+            <div class="payment-option">
+
+
+                <label>
+
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="UPI"
+                    >
+
+
+                    UPI
+
+
+                </label>
+
+
+            </div>
+
+
+            <!-- CARD -->
+
+            <div class="payment-option">
+
+
+                <label>
+
+
+                    <input
+                        type="radio"
+                        name="payment_method"
+                        value="CARD"
+                    >
+
+
+                    Card
+
+
+                </label>
+
+
+            </div>
+
+
+            <!-- PLACE ORDER -->
+
+            <button
+                type="submit"
+                class="place-order-btn"
+            >
+
+                Place Order
+
+            </button>
+
+
+        </div>
+
+
+    </form>
+
+
+    <!-- =========================
+         BACK TO CART
+    ========================= -->
+
+    <a
+        href="{% url 'cart' %}"
+        class="back-btn"
+    >
+
+        ← Back to Cart
+
+    </a>
+
+
+</div>
+
+
+<!-- =========================
+     USE SAVED ADDRESS
+========================= -->
+
+<script>
+
+function useAddress(
+    fullName,
+    phone,
+    address,
+    city,
+    state,
+    pincode
+) {
+
+
+    document.getElementById(
+        "full_name"
+    ).value = fullName;
+
+
+    document.getElementById(
+        "phone"
+    ).value = phone;
+
+
+    document.getElementById(
+        "address"
+    ).value = address;
+
+
+    document.getElementById(
+        "city"
+    ).value = city;
+
+
+    document.getElementById(
+        "state"
+    ).value = state;
+
+
+    document.getElementById(
+        "pincode"
+    ).value = pincode;
+
+
+    document.getElementById(
+        "full_name"
+    ).scrollIntoView({
+        behavior: "smooth"
+    });
+
+
+}
+
+</script>
+
+
+</body>
+
+</html>
